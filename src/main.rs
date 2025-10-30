@@ -3,7 +3,7 @@ use std::io::Write;
 
 fn main() {
     println!("───────────────────\n║ MINI-CALCULATOR ║\n───────────────────");
-    println!("Select an operation:\n[1] Addition(+)\n[2] Subtraction(-)\n[3] Multiplication(*)\n[4] Subtraction(÷)\n[0] Exit");
+    println!("Select an operation:\n[1] Addition(+)\n[2] Subtraction(-)\n[3] Multiplication(*)\n[4] Division(÷)\n[0] Exit");
 
     loop {
         print!("> ");
@@ -28,7 +28,28 @@ fn main() {
 
         match input {
             0 => break,
-            _ => todo!()
+            1 | 2 | 3 | 4 => todo!(),
+            _ => {
+                println!("Invalid choice. Choose an operation by typing 0 - 4!")
+            }
+        }
+    }
+}
+
+enum Operation {
+    Addition,
+    Subtraction,
+    Multiplication,
+    Division,
+}
+
+impl Operation {
+    fn operate(&self, a: i32, b: i32) -> i32 {
+        match self {
+            Operation::Addition => a + b,
+            Operation::Subtraction => a - b,
+            Operation::Multiplication => a * b,
+            Operation::Division => a / b,
         }
     }
 }
