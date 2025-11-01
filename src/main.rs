@@ -3,24 +3,40 @@ use std::io::Write;
 
 fn main() {
     println!("───────────────────\n║ MINI-CALCULATOR ║\n───────────────────");
-    println!("Select an operation:\n[1] Addition(+)\n[2] Subtraction(-)\n[3] Multiplication(*)\n[4] Division(÷)\n[0] Exit");
-
-
 
     loop {
-        let input = prompt();
+        println!("Select an operation:\n[1] Addition(+)\n[2] Subtraction(-)\n[3] Multiplication(*)\n[4] Division(÷)\n[0] Exit");
+        let input: i32 = prompt() as i32;
+
+        if input == 0 {
+            println!("\nExiting...\n");
+            std::process::exit(0);
+        }
+
+        println!("Enter the first number: ");
+        let first_number = prompt();
+
+        println!("Enter the second number: ");
+        let second_number = prompt();
 
         match input {
-            0 => break,
-            1 | 2 | 3 | 4 => todo!(),
+            1 => print_results(&Operation::Addition, first_number, second_number),
+            2 => print_results(&Operation::Subtraction, first_number, second_number),
+            3 => print_results(&Operation::Multiplication, first_number, second_number),
+            4 => print_results(&Operation::Division, first_number, second_number),
             _ => {
                 println!("Invalid choice. Choose an operation by typing 0 - 4!");
                 continue;
             }
         }
-    }
+    };
 }
 
+fn print_results(operation: &Operation, a: f32, b: f32) {
+    let result = Operation::operate(&operation, a, b);
+    let symbol = Operation::symbol(&operation);
+    println!("============================\nThe result of {a} {symbol} {b} = {result}\n============================");
+}
 enum Operation {
     Addition,
     Subtraction,
@@ -29,7 +45,16 @@ enum Operation {
 }
 
 impl Operation {
-    fn operate(&self, a: i32, b: i32) -> i32 {
+    fn symbol(&self) -> &'static str {
+        match self {
+            Operation::Addition => "+",
+            Operation::Subtraction => "-",
+            Operation::Multiplication => "*",
+            Operation::Division => "/"
+        }
+    }
+
+    fn operate(&self, a: f32, b: f32) -> f32 {
         match self {
             Operation::Addition => a + b,
             Operation::Subtraction => a - b,
@@ -39,7 +64,7 @@ impl Operation {
     }
 }
 
-fn prompt() -> i32 {
+fn prompt() -> f32 {
     loop {
         print!("> ");
         io::stdout().flush().unwrap();
@@ -53,7 +78,7 @@ fn prompt() -> i32 {
             }
         };
 
-        let input: i32 = match input.trim().parse() {
+        let input: f32 = match input.trim().parse() {
             Ok(input) => input,
             Err(e) => {
                 println!("{e}. Please enter a number!");
